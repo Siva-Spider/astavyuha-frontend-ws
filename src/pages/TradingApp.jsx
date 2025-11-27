@@ -62,7 +62,7 @@ function TradingApp({ user, setUser }) {
     useEffect(() => localStorage.setItem(`${userId}_tradingStatus`, JSON.stringify(tradingStatus)), [tradingStatus]);
     useEffect(() => localStorage.setItem(`${userId}_tradeLogs`, JSON.stringify(tradeLogs)), [tradeLogs]);
 
-    const [selectionType, setSelectionType] = useState(() => localStorage.getItem(`${userId}selectionType`) || "EQUITY");
+    const [selectionType, setSelectionType] = useState(() => localStorage.getItem(`${userId}_selectionType`) || "EQUITY");
     useEffect(() => localStorage.setItem(`${userId}_selectionType`, selectionType), [selectionType]);
 
     useEffect(() => {
