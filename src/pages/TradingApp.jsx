@@ -379,9 +379,20 @@ function TradingApp({ user, setUser }) {
                         }}
                         onStockSelection={(i, key, val, type) => {
                             const stockKey = `stock_${i}`;
-                            setTradingParameters((prev) => ({
+                            setTradingParameters(prev => ({
                                 ...prev,
-                                [stockKey]: { ...prev[stockKey], symbol_key: key, symbol_value: val, type },
+                                [stockKey]: {
+                                    type,
+                                    symbol_key: key,
+                                    symbol_value: val,
+                                    broker: prev[stockKey]?.broker || "",
+                                    strategy: prev[stockKey]?.strategy || "ADX_MACD_WillR_Supertrend",
+                                    interval: prev[stockKey]?.interval || "1",
+                                    lots: prev[stockKey]?.lots || 0,
+                                    lot_size: prev[stockKey]?.lot_size || 0,
+                                    tick_size: prev[stockKey]?.tick_size || 0,
+                                    total_shares: prev[stockKey]?.lots * prev[stockKey]?.lot_size || 0,
+                                }
                             }));
                             fetchLotSize(i, key, val, type);
                         }}
