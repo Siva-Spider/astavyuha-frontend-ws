@@ -390,9 +390,24 @@ function TradingApp({ user, setUser }) {
                             const val = e.target.value;
 
                             setTradingParameters((prev) => {
-                                const updated = { ...prev };
-                                updated[stockKey][field] = val;
-
+                                const updated = { 
+                                    ...prev, 
+                                    [stockKey]: {
+                                        type: prev[stockKey]?.type || "EQUITY",
+                                        symbol_key: prev[stockKey]?.symbol_key || "",
+                                        symbol_value: prev[stockKey]?.symbol_value || "",
+                                        broker: prev[stockKey]?.broker || "",
+                                        strategy: prev[stockKey]?.strategy || "ADX_MACD_WillR_Supertrend",
+                                        interval: prev[stockKey]?.interval || "1",
+                                        lots: prev[stockKey]?.lots || 0,
+                                        lot_size: prev[stockKey]?.lot_size || 0,
+                                        total_shares: prev[stockKey]?.total_shares || 0,
+                                        target_percentage: prev[stockKey]?.target_percentage || 0,
+                                        ...prev[stockKey],
+                                        [field]: val
+                                    }
+                                };
+                                
                                 const lots = parseInt(updated[stockKey].lots || 0);
                                 const size = parseInt(updated[stockKey].lot_size || 0);
                                 updated[stockKey].total_shares = lots * size;
