@@ -53,7 +53,7 @@ export const LogWSProvider = ({ children }) => {
         return;
     }
 
-    const url = `ws://127.0.0.1:8000/ws/logs?user_id=${userId}`;
+    const url = `wss://astavyuha.org/ws/logs?user_id=${userId}`;
 
     if (wsRef.current) return; // already open
 
