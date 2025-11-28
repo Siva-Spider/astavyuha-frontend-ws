@@ -131,7 +131,20 @@ const SelectStock = (props) => {
 
                 {Array.from({ length: stockCount }).map((_, index) => {
                     const key = `stock_${index}`;
-                    const currentParams = tradingParameters[key] || {};
+                    const currentParams = tradingParameters[key] || {
+                        type: selectionType,
+                        symbol_key: "",
+                        symbol_value: "",
+                        broker: "",
+                        strategy: "ADX_MACD_WillR_Supertrend",
+                        interval: "1",
+                        lots: 0,
+                        lot_size: 0,
+                        tick_size: 0,
+                        total_shares: 0,
+                        target_percentage: 0,
+                    };
+
                     return (
                         <div
                             key={key}
