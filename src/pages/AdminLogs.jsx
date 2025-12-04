@@ -103,6 +103,23 @@ function renderLogLine(line, darkMode) {
   );
 }
 
+function formatLogForExport(line) {
+  let log;
+  try {
+    log = JSON.parse(line);
+  } catch {
+    return line; // fallback if not JSON
+  }
+
+  let txt = `[${log.ts}] ${log.level.toUpperCase()}\n`;
+  txt += `Message: ${log.message}\n`;
+
+  if (log.user_id) txt += `User: ${log.user_id}\n`;
+  if (log.type) txt += `Type: ${log.type}\n`;
+
+  return txt + "\n";
+}
+
 /* --------------------------------------------------
    ⭐ MAIN ADMIN LOG VIEWER PAGE
 -------------------------------------------------- */
@@ -174,7 +191,7 @@ export default function AdminLogs() {
     const baseName = `${selectedUser || "logs"}_${type}_${fromDate}_to_${toDate}`;
 
     if (format === "text") {
-      const content = logs.join("\n");
+      const content = logs.map(line => formatLogForExport(line)).join("\n");
       const blob = new Blob([content], {
         type: "text/plain;charset=utf-8",
       });
@@ -196,7 +213,12 @@ export default function AdminLogs() {
         }
       });
 
-      const content = JSON.stringify(parsed, null, 2);
+      const content = JSON.stringify(
+        logs.map(line => formatLogForExport(line)),
+        null,
+        2
+      );
+
       const blob = new Blob([content], {
         type: "application/json;charset=utf-8",
       });
@@ -210,19 +232,36 @@ export default function AdminLogs() {
         format: "a4",
       });
 
-      const content = logs.join("\n");
-      const marginLeft = 40;
-      const marginTop = 40;
-      const maxWidth = 515; // A4 width (595) - margins
-
-      const lines = doc.splitTextToSize(content, maxWidth);
+      const content = logs.map(line => formatLogForExport(line)).join("\n");
 
       doc.setFont("courier", "normal");
-      doc.setFontSize(10);
-      doc.text(lines, marginLeft, marginTop);
+      doc.setFontSize(9);
+      doc.setLineHeightFactor(1.1);
+
+      const marginLeft = 40;
+      const marginTop = 40;
+      const maxWidth = 515;
+      const lineHeight = 12;            // height of each printed line
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      const wrapped = doc.splitTextToSize(content, maxWidth);
+
+      let y = marginTop;
+
+      wrapped.forEach((line) => {
+        // Add new page if printing past bottom margin
+        if (y + lineHeight > pageHeight - marginTop) {
+          doc.addPage();
+          y = marginTop;
+        }
+
+        doc.text(line, marginLeft, y);
+        y += lineHeight;
+      });
 
       doc.save(`${baseName}.pdf`);
     }
+
   };
 
   return (
@@ -372,14 +411,14 @@ export default function AdminLogs() {
         }}
       >
         {logs.length === 0 ? (
-           loading ? "Fetching logs..." : "No logs found."
-         ) : (
-           logs.map((line, idx) => (
-             <div key={idx}>
-               {renderLogLine(line, darkMode)}
-             </div>
-           ))
-         )}
+          loading ? "Fetching logs..." : "No logs found."
+        ) : (
+          logs.map((line, idx) => (
+            <div key={idx}>
+              {renderLogLine(line, darkMode)}
+            </div>
+          ))
+        )}
 
       </div>
     </div>
