@@ -54,6 +54,55 @@ function DarkModeSwitch({ darkMode, setDarkMode }) {
   );
 }
 
+function renderLogLine(line, darkMode) {
+  let log;
+  try {
+    log = JSON.parse(line);
+  } catch {
+    return <div style={{ marginBottom: "10px" }}>{line}</div>;
+  }
+
+  const levelColor = {
+    error: "#DC2626",
+    warning: "#F59E0B",
+    info: "#10B981",
+  };
+
+  return (
+    <div
+      style={{
+        padding: "10px",
+        marginBottom: "12px",
+        borderRadius: "6px",
+        background: darkMode ? "#1F2937" : "#ffffff",
+        border: "1px solid #ddd",
+      }}
+    >
+      <div style={{ fontWeight: "bold", marginBottom: "5px" }}>
+        <span style={{ color: levelColor[log.level] || "#4B5563" }}>
+          [{log.ts}] {log.level.toUpperCase()}
+        </span>
+      </div>
+
+      <div style={{ marginBottom: "5px" }}>
+        <strong>Message:</strong>
+        <pre
+          style={{
+            whiteSpace: "pre-wrap",
+            margin: 0,
+            color: darkMode ? "#E5E7EB" : "#333",
+          }}
+        >
+          {log.message}
+        </pre>
+      </div>
+
+      {log.user_id && <div><strong>User:</strong> {log.user_id}</div>}
+      {log.type && <div><strong>Type:</strong> {log.type}</div>}
+    </div>
+  );
+}
+
 /* --------------------------------------------------
    ⭐ MAIN ADMIN LOG VIEWER PAGE
 -------------------------------------------------- */
@@ -322,11 +371,16 @@ export default function AdminLogs() {
           transition: "0.3s",
         }}
       >
-        {logs.length === 0
-          ? loading
-            ? "Fetching logs..."
-            : "No logs found."
-          : logs.join("\n")}
+        {logs.length === 0 ? (
+           loading ? "Fetching logs..." : "No logs found."
+         ) : (
+           logs.map((line, idx) => (
+             <div key={idx}>
+               {renderLogLine(line, darkMode)}
+             </div>
+           ))
+         )}
+
       </div>
     </div>
   );
