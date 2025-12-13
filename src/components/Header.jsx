@@ -24,10 +24,10 @@ export default function Header() {
       {/* Right side: Contact Info */}
       <div style={{ textAlign: "right" }}>
         <div style={{ fontSize: "1rem", fontWeight: "500" }}>
-          📞 +91 8099887688
+          📞 +91 6303317143
         </div>
         <div style={{ fontSize: "1rem" }}>
-          ✉️ <a href="mailto:sivag.prasad88@gmail.com" style={{ color: "#f3eacaff", textDecoration: "none" }}>
+          ✉️ <a href="mailto:vijayaranikraja@gmail.com" style={{ color: "#f3eacaff", textDecoration: "none" }}>
             sivag.prasad88@gmail.com
           </a>
         </div>
