@@ -78,12 +78,12 @@ export default function Support() {
       {/* Contact info */}
       <div style={{ display: "flex", gap: "2rem", marginBottom: "2rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <FaWhatsapp color="#25D366" /> <span>{user.mobilenumber}</span>
+          <FaWhatsapp color="#25D366" /> <span>+91 6303317143</span>
         </div>
         <div>
           Email:{" "}
-          <a href={`mailto:sivag.prasad88@gmail.com`}>
-            sivag.prasad88@gmail.com
+          <a href={`mailto:vijayaranikraja@gmail.com`}>
+            vijayaranikraja@gmail.com
           </a>
         </div>
       </div>
